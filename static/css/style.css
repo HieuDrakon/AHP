@@ -1,0 +1,68 @@
+body {
+    font-family: 'Times New Roman', sans-serif;
+}
+
+.chart-container {
+    max-width: 100%;
+    width: 300px;
+    margin: 0 auto;
+}
+
+.overall-chart-container {
+    width: 500px;
+    /* Larger size for the overall chart */
+    max-width: 100%;
+    /* Ensure it doesn't overflow */
+}
+
+@media (max-width: 640px) {
+    .chart-container {
+        width: 250px;
+        /* Default for other charts */
+    }
+
+    .overall-chart-container {
+        width: 350px;
+        /* Smaller but still larger than others on mobile */
+    }
+}
+
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.matrix-input {
+    width: 60px;
+    text-align: center;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td,
+th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 4px;
+}
+
+.input-error {
+    border: 2px solid red;
+}
+
+input[readonly] {
+    background-color: #f0f0f0;
+    /* Light gray background */
+    cursor: not-allowed;
+    /* Indicate non-editable */
+}

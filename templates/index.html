@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hỗ trợ chọn Địa Điểm Sống Cho Sinh Viên</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center p-4">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">Hỗ trợ chọn Địa Điểm Sống Cho Sinh Viên</h1>
+    <div id="criteria-selection" class="mb-4">
+        <h2 class="text-xl font-semibold mb-2">Các phương án: ký túc xá trong trường, nhà trọ gần trường, nhà trọ xa
+            trường, chung cư mini, nhà ở cùng người thân</h2>
+        <h2 class="text-xl font-semibold mb-2">Chọn tiêu chí</h2>
+        <div class="flex flex-wrap gap-4">
+            <label><input type="checkbox" value="Giá cả" class="criteria-checkbox"> Giá cả</label>
+            <label><input type="checkbox" value="Khoảng cách đến trường" class="criteria-checkbox"> Khoảng cách đến
+                trường</label>
+            <label><input type="checkbox" value="Tiện nghi" class="criteria-checkbox"> Tiện nghi</label>
+            <label><input type="checkbox" value="An ninh" class="criteria-checkbox"> An ninh</label>
+            <label><input type="checkbox" value="Dịch vụ xung quanh" class="criteria-checkbox"> Dịch vụ xung
+                quanh</label>
+            <label><input type="checkbox" value="Môi trường sống" class="criteria-checkbox"> Môi trường sống</label>
+        </div>
+        <div class="flex items-center gap-2">
+            <input type="text" id="customCriterion" placeholder="Nhập tiêu chí mới" class="border p-2 rounded">
+            <button onclick="addCustomCriterion()"
+                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Thêm
+                tiêu chí</button>
+        </div>
+        <div id="customCriteriaList" class="mt-4">
+            <h3 class="text-sm font-medium mt-2">Tiêu chí mới:</h3>
+        </div>
+        <div><button onclick="showCriteriaMatrix()"
+                class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Tiếp tục</button>
+        </div>
+    </div>
+    <div id="criteria-matrix-input" class="hidden mb-4 w-full max-w-4xl">
+        <h2 class="text-xl font-semibold mb-2">Nhập ma trận so sánh cặp tiêu chí</h2>
+        <div id="criteria-matrix"></div>
+        <div id="criteria-matrix-error" class="error-message"></div>
+        <button onclick="checkCriteriaMatrix()"
+            class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Tiếp tục</button>
+        <button onclick="resetToCriteria()" class="ml-2 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Quay
+            lại</button>
+    </div>
+    <div id="alternative-matrices-input" class="hidden mb-4 w-full max-w-4xl">
+        <h2 class="text-xl font-semibold mb-2">Nhập ma trận so sánh cặp phương án</h2>
+        <div id="alternative-matrices"></div>
+        <div id="alternative-matrices-error" class="error-message"></div>
+        <button onclick="calculateAHP()" class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Tính
+            toán</button>
+        <button onclick="backToCriteriaMatrix()"
+            class="ml-2 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Quay lại</button>
+    </div>
+    <div id="buttons" class="mb-4">
+        <button onclick="fetchDefaultData()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Gợi
+            ý</button>
+        <button onclick="showHistory()" class="ml-2 bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">Xem
+            lịch sử</button>
+    </div>
+    <div id="loading" class="hidden text-red-500 mb-4">Đang tải...</div>
+    <div id="content" class="hidden w-full max-w-6xl">
+        <div class="card bg-white p-4 rounded-lg shadow mb-6">
+            <h2 class="text-xl font-semibold mb-2">Xếp hạng tổng hợp</h2>
+            <div class="overall-chart-container chart-container">
+                <canvas id="overallChart"></canvas>
+            </div>
+            <ol id="overall-ranking" class="list-decimal list-inside mt-4"></ol>
+        </div>
+        <div id="criteria-charts" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6"></div>
+        <button onclick="resetInterface()" class="mt-4 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Trở
+            về</button>
+    </div>
+    <div id="history" class="hidden w-full max-w-6xl">
+        <h2 class="text-xl font-semibold mb-2">Lịch sử tính toán</h2>
+        <div id="history-list" class="bg-white p-4 rounded-lg shadow"></div>
+        <button onclick="resetInterface()" class="mt-4 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Trở
+            về</button>
+    </div>
+
+ 
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>
