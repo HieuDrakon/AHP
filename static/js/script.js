@@ -349,6 +349,9 @@ async function showHistory() {
                         <p><strong>Thời gian:</strong> ${new Date(item.timestamp).toLocaleString()}</p>
                         <p><strong>Tiêu chí:</strong> ${item.criteria.join(', ')}</p>
                         <p><strong>Trọng số tiêu chí:</strong> ${Object.entries(item.criteria_weights).map(([k, v]) => `${k}: ${v}%`).join(', ')}</p>
+                        <p><strong>Lamda_max:</strong> ${item.lambda_max}</p>
+                        <p><strong>CR:</strong> ${item.cr}</p>
+                        <p><strong>CI:</strong> ${item.ci}</p>                        
                         <p><strong>Xếp hạng:</strong> ${item.rankings.map(r => `${r.name}: ${r.score}%`).join(', ')}</p>
                     </div>
                 `).join('');
@@ -503,3 +506,24 @@ function resetInterface() {
         }
     });
 }
+document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fileInput = document.getElementById('excelFile');
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]);
+
+    try {
+        const response = await fetch('/api/calculate-ahp-from-excel', {
+            method: 'POST',
+            body: formData
+        });
+        const result = await response.json();
+        if (response.ok) {
+            console.log('AHP Results:', result);
+        } else {
+            console.error('Error:', result.error);
+        }
+    } catch (error) {
+        console.error('Request failed:', error);
+    }
+});
