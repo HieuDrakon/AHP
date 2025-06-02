@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Báo cáo AHP</title>
+    <style>
+        body {
+            font-family: 'DejaVu Sans', sans-serif;
+            margin: 20mm;
+            font-size: 12pt;
+            line-height: 1.5;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #2c3e50;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 18pt;
+        }
+
+        h2 {
+            font-size: 14pt;
+            margin-top: 20px;
+        }
+
+        h3 {
+            font-size: 12pt;
+            margin-top: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        ul,
+        ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 10pt;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Báo cáo Phân tích thứ tự ưu tiên (AHP)</h1>
+    <p><strong>ID Tính toán:</strong> {{ data.calculation_id }}</p>
+    <p><strong>Thời gian:</strong> {{ data.timestamp}}</p>
+
+    <div class="section">
+        <h2>Ma trận tiêu chí đã nhập</h2>
+        <table>
+            <tr>
+                <th></th>
+                {% for criterion in data.criteria %}
+                <th>{{ criterion }}</th>
+                {% endfor %}
+            </tr>
+            {% for i in range(data.criteria|length) %}
+            <tr>
+                <td>{{ data.criteria[i] }}</td>
+                {% for val in data.criteria_matrix[i] %}
+                <td>{{ val|round(2) }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Trọng số tiêu chí</h2>
+        <ul>
+            {% for criterion, weight in data.criteria_weights.items() %}
+            <li>{{ criterion }}: {{ weight|round(2) }}%</li>
+            {% endfor %}
+        </ul>
+        <p><strong>Lambda_max:</strong> {{ data.lambda_max|round(2) }}</p>
+        <p><strong>CI:</strong> {{ data.ci|round(2) }}</p>
+        <p><strong>CR:</strong> {{ data.cr|round(2) }}</p>
+    </div>
+
+    {% for criterion in data.criteria %}
+    <div class="section">
+        <h2>Ma trận phương án theo {{ criterion }}</h2>
+        <table>
+            <tr>
+                <th></th>
+                {% for alt in data.alternative_matrices[criterion][0] %}
+                <th>{{ alt }}</th>
+                {% endfor %}
+            </tr>
+            {% set matrix = data.alternative_matrices[criterion] %}
+            {% for i in range(matrix | length) %}
+            <tr>
+                <td>{{ matrix[0][i] }}</td>
+                {% for val in matrix[i] %}
+                <td>{{ val|round(2) }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+
+        </table>
+
+        <h3>Trọng số phương án</h3>
+        <ul>
+            {% for alt, weight in data.alternative_weights[criterion].items() %}
+            <li>{{ alt }}: {{ weight|round(2) }}%</li>
+            {% endfor %}
+        </ul>
+
+        <h3>Xếp hạng phương án</h3>
+        <ol>
+            {% for rank in data.alternative_rankings[criterion] %}
+            <li>{{ rank.name }}: {{ rank.score|round(2) }}%</li>
+            {% endfor %}
+        </ol>
+
+        <h3>Chỉ số nhất quán</h3>
+        <p><strong>Lambda_max:</strong> {{ data.alternative_lambda_max[criterion]|round(2) }}</p>
+        <p><strong>CI:</strong> {{ data.alternative_ci[criterion]|round(2) }}</p>
+        <p><strong>CR:</strong> {{ data.alternative_cr[criterion]|round(2) }}</p>
+    </div>
+    {% endfor %}
+
+    <div class="section">
+        <h2>Xếp hạng tổng hợp</h2>
+        <ol>
+            {% for rank in data.rankings %}
+            <li>{{ rank.name }}: {{ rank.score|round(2) }}%</li>
+            {% endfor %}
+        </ol>
+    </div>
+
+    <div class="footer">
+        <p>Báo cáo được tạo bởi Hệ thống AHP</p>
+    </div>
+</body>
+
+</html>
